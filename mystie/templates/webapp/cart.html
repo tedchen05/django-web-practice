@@ -1,0 +1,50 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}訂購車{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">🛒 我的訂購車</h2>
+  {% if order_products %}
+    <table class="table table-bordered table-hover">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+            <th scope="col">訂購人</th>
+          <th scope="col">產品名稱</th>
+          <th scope="col">數量</th>
+          <th scope="col">單價</th>
+<!--          <th scope="col">總價</th>-->
+          <th scope="col">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order_products %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ item.customer }}</td>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>NT${{ item.total_price }}</td>
+<!--          <td>NT${{ item.product.price|floatformat:0|add:item.quantity|floatformat:0 }}</td>-->
+          <td>
+            <form method="POST" action="">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger">移除</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="text-right mt-4">
+      <a href="" class="btn btn-success">結帳</a>
+    </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      您的訂購車目前是空的。
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
