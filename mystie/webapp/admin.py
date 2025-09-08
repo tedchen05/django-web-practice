@@ -17,7 +17,7 @@ class NavigationAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 class OrderProductAdmin(admin.ModelAdmin):
-    list_display = ('id','customer', 'product_name','quantity', 'total_price', 'ordered_at')
+    list_display = ('id','customer', 'product_name','quantity','price', 'total_price', 'ordered_at')
     list_filter = ('customer', 'product_name')
     search_fields = ('customer', 'product_name')
     ordering = ('id',)

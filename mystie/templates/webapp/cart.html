@@ -10,35 +10,42 @@
       <thead class="thead-light">
         <tr>
           <th scope="col">#</th>
-            <th scope="col">訂購人</th>
+          <th scope="col">訂購人</th>
           <th scope="col">產品名稱</th>
           <th scope="col">數量</th>
-          <th scope="col">單價</th>
-<!--          <th scope="col">總價</th>-->
+          <th scope="col">單一價格</th>
+          <th scope="col">單品總價</th>
           <th scope="col">操作</th>
         </tr>
       </thead>
       <tbody>
-        {% for item in order_products %}
-        <tr>
+            {% for item in order_products %}
+        <tr data-item-id="{{ item.id }}">
           <th scope="row">{{ forloop.counter }}</th>
           <td>{{ item.customer }}</td>
           <td>{{ item.product_name }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>NT${{ item.total_price }}</td>
-<!--          <td>NT${{ item.product.price|floatformat:0|add:item.quantity|floatformat:0 }}</td>-->
           <td>
-            <form method="POST" action="">
+            <span class="quantity-text">{{ item.quantity }}</span>
+            <input type="number" class="form-control quantity-input d-none" style="width: 60px;" value="{{ item.quantity }}">
+          </td>
+          <td>NT${{ item.price }}</td>
+          <td class="total-price">NT${{ item.total_price }}</td>
+          <td>
+<!--            <form method="POST" action="">-->
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-danger">移除</button>
-            </form>
+            <button type="button" class="btn btn-sm btn-secondary edit-btn">修改</button>
+            <button type="button" class="btn btn-sm btn-danger remove-btn">移除</button>
+<!--            </form>-->
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <div class="text-right mt-4">
+    <div class="d-flex justify-content-end align-items-center mt-4">
+      <h5 id="order-total" class="mb-0" style="margin-right: 1rem;">
+        訂單總金額：<strong>NT${{ total_amount|floatformat:2 }}</strong>
+      </h5>
       <a href="" class="btn btn-success">結帳</a>
     </div>
   {% else %}
@@ -47,4 +54,105 @@
     </div>
   {% endif %}
 </div>
+
+<script>
+document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
+  editBtn.addEventListener('click', function() {
+    const row = editBtn.closest('tr');
+    const quantityText = row.querySelector('.quantity-text');
+    const quantityInput = row.querySelector('.quantity-input');
+    const removeBtn = row.querySelector('.remove-btn');
+
+    const isEditing = !quantityInput.classList.contains('d-none');
+
+    if (!isEditing) {
+      // 進入編輯模式
+      quantityText.classList.add('d-none');
+      quantityInput.classList.remove('d-none');
+
+      editBtn.textContent = '確定';
+      editBtn.classList.remove('btn-secondary');
+      editBtn.classList.add('btn-primary');
+
+      removeBtn.textContent = '取消';
+      removeBtn.classList.remove('btn-danger');
+      removeBtn.classList.add('btn-warning');
+    } else {
+      // 確定修改
+      const newQuantity = quantityInput.value;
+      const itemId = row.dataset.itemId;
+
+      fetch('cart-update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          quantity: newQuantity,
+          item_id: itemId,
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('更新失敗');
+        return response.json();
+      })
+      .then(data => {
+        quantityText.textContent = data.new_quantity;
+        quantityText.classList.remove('d-none');
+        quantityInput.classList.add('d-none');
+
+        // 更新總價欄位
+        const totalPriceCell = row.querySelector('.total-price');
+        if (totalPriceCell) {
+          const formattedPrice = parseFloat(data.new_total_price).toFixed(2);
+          totalPriceCell.textContent = `NT$${formattedPrice}`;
+        }
+        const orderTotalElement = document.querySelector('#order-total');
+        orderTotalElement.textContent = `訂單總金額：NT$${data.order_total}`;
+
+        editBtn.textContent = '修改';
+        editBtn.classList.remove('btn-primary');
+        editBtn.classList.add('btn-secondary');
+
+        removeBtn.textContent = '移除';
+        removeBtn.classList.remove('btn-warning');
+        removeBtn.classList.add('btn-danger');
+      })
+      .catch(error => {
+        alert('更新失敗');
+      });
+    }
+  });
+
+  // 處理取消按鈕
+  const removeBtn = editBtn.closest('tr').querySelector('.remove-btn');
+  removeBtn.addEventListener('click', function() {
+    const row = removeBtn.closest('tr');
+    const quantityText = row.querySelector('.quantity-text');
+    const quantityInput = row.querySelector('.quantity-input');
+    const editBtn = row.querySelector('.edit-btn');
+
+    const isEditing = !quantityInput.classList.contains('d-none');
+
+    if (isEditing) {
+      // 取消編輯
+      quantityInput.value = quantityText.textContent;
+      quantityText.classList.remove('d-none');
+      quantityInput.classList.add('d-none');
+
+      editBtn.textContent = '修改';
+      editBtn.classList.remove('btn-primary');
+      editBtn.classList.add('btn-secondary');
+
+      removeBtn.textContent = '移除';
+      removeBtn.classList.remove('btn-warning');
+      removeBtn.classList.add('btn-danger');
+    } else {
+      // TODO: 執行移除邏輯（例如送出表單或 AJAX）
+      alert('你點了移除');
+    }
+  });
+});
+</script>
 {% endblock %}

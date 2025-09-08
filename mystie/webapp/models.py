@@ -23,7 +23,8 @@ class OrderProduct(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="訂購人")
     product_name = models.CharField(max_length=100, verbose_name="產品名稱")
     quantity = models.PositiveIntegerField(default=1, verbose_name="數量")
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="金額")
+    price = models.IntegerField(default=0, verbose_name="單一價格(元)")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="單品總價")
     ordered_at = models.DateTimeField(auto_now_add=True, verbose_name="訂購時間")
 
     def __str__(self):
