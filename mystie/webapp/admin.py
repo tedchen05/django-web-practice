@@ -11,7 +11,7 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 class NavigationAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'url')
+    list_display = ('id', 'order','title', 'url')
     list_filter = ('title','url')
     search_fields = ('title','url')
     ordering = ('id',)

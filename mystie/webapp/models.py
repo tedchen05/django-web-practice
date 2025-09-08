@@ -12,8 +12,9 @@ class Product(models.Model):
         return f"{self.name} - ${self.price}"
 
 class Navigation(models.Model):
-    title = models.CharField(max_length=100)  # 顯示文字
-    url = models.CharField(max_length=200, blank=True)  # 對應連結
+    title = models.CharField(max_length=100, verbose_name="名稱")  # 顯示文字
+    url = models.CharField(max_length=200, blank=True, verbose_name="連結")  # 對應連結
+    order = models.PositiveIntegerField(default=0, verbose_name="排序")
 
     def __str__(self):
         return self.title

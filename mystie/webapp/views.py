@@ -12,14 +12,14 @@ from webapp.models import Product, Navigation, OrderProduct
 @login_required(login_url='/')
 def menu(request):
     products = Product.objects.all()
-    nav_items = Navigation.objects.all()
+    nav_items = Navigation.objects.all().order_by('order')
     data = {'products': products, 'nav_items': nav_items}
     return render(request, 'webapp/menu.html', data)
 
 @login_required(login_url='/')
 def cart(request):
     order_products = OrderProduct.objects.filter(customer=request.user)
-    nav_items = Navigation.objects.all()
+    nav_items = Navigation.objects.all().order_by('order')
     context = {
         'order_products': order_products,
         'nav_items': nav_items
@@ -28,7 +28,7 @@ def cart(request):
 
 @login_required(login_url='/')
 def home(request):
-    nav_items = Navigation.objects.all()
+    nav_items = Navigation.objects.all().order_by('order')
     return render(request, 'webapp/base.html', {'nav_items': nav_items})
 
 @login_required(login_url='/')
