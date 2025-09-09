@@ -47,8 +47,26 @@ def cart_update(request):
 
         total_amount = OrderProduct.objects.filter(customer=request.user).aggregate(Sum('total_price'))['total_price__sum'] or 0
 
-        return JsonResponse({'status': 'success', 'new_quantity': item.quantity, 'new_total_price': item.total_price, 'order_total': round(total_amount, 2)})
-    return JsonResponse({'status': 'error', 'message': '只接受 POST 請求'}, status=405)
+        return JsonResponse({'new_quantity': item.quantity, 'new_total_price': item.total_price, 'order_total': round(total_amount, 2)})
+    return JsonResponse({}, status=405)
+
+@login_required(login_url='/')
+def cart_remove(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+
+        item = OrderProduct.objects.get(id=item_id)
+        item.delete()
+
+        # 重新計算訂單總金額
+        remaining_items = OrderProduct.objects.all()
+        total = sum([i.total_price for i in remaining_items])
+
+        return JsonResponse({'order_total': round(total, 2), 'order_empty': remaining_items.count() == 0})
+    return JsonResponse({}, status=400)
+
+
 
 @login_required(login_url='/')
 def home(request):

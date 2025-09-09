@@ -9,7 +9,7 @@
     <table class="table table-bordered table-hover">
       <thead class="thead-light">
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">編號</th>
           <th scope="col">訂購人</th>
           <th scope="col">產品名稱</th>
           <th scope="col">數量</th>
@@ -44,9 +44,9 @@
 
     <div class="d-flex justify-content-end align-items-center mt-4">
       <h5 id="order-total" class="mb-0" style="margin-right: 1rem;">
-        訂單總金額：<strong>NT${{ total_amount|floatformat:2 }}</strong>
+        訂單總金額：NT${{ total_amount|floatformat:2 }}
       </h5>
-      <a href="" class="btn btn-success">結帳</a>
+      <a href="#" id="checkout-btn" class="btn btn-success">結帳</a>
     </div>
   {% else %}
     <div class="alert alert-info" role="alert">
@@ -56,6 +56,10 @@
 </div>
 
 <script>
+document.getElementById('checkout-btn').addEventListener('click', function(e) {
+  e.preventDefault(); // 阻止跳轉
+  alert('暫無此功能');
+});
 document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
   editBtn.addEventListener('click', function() {
     const row = editBtn.closest('tr');
@@ -149,8 +153,41 @@ document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
       removeBtn.classList.remove('btn-warning');
       removeBtn.classList.add('btn-danger');
     } else {
-      // TODO: 執行移除邏輯（例如送出表單或 AJAX）
-      alert('你點了移除');
+      // 執行移除邏輯
+      const itemId = row.dataset.itemId;
+
+      fetch('cart-remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ item_id: itemId })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('移除失敗');
+        return response.json();
+      })
+      .then(data => {
+        // 從 DOM 中移除該列
+        row.remove();
+
+        // 更新訂單總金額
+        const orderTotalElement = document.querySelector('#order-total');
+        orderTotalElement.textContent = `訂單總金額：NT$${data.order_total}`;
+        // 如果購物車變空，顯示提示訊息
+        if (data.order_empty) {
+          const container = document.querySelector('.container');
+          container.innerHTML = `
+            <div class="alert alert-info" role="alert">
+              您的訂購車目前是空的。
+            </div>
+          `;
+        }
+      })
+      .catch(error => {
+        alert('移除失敗');
+      });
     }
   });
 });
