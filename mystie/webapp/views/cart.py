@@ -1,26 +1,19 @@
 import json
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from webapp.models import Product, Navigation, OrderProduct
+from webapp.models import OrderProduct, Product
+from webapp.views.home import get_navigation
 
 
 # Create your views here.
-
-@login_required(login_url='/')
-def menu(request):
-    products = Product.objects.all()
-    nav_items = Navigation.objects.all().order_by('order')
-    data = {'products': products, 'nav_items': nav_items}
-    return render(request, 'webapp/menu.html', data)
-
 @login_required(login_url='/')
 def cart(request):
     order_products = OrderProduct.objects.filter(customer=request.user)
-    nav_items = Navigation.objects.all().order_by('order')
+    # nav_items = Navigation.objects.all().order_by('order')
+    nav_items = get_navigation()
     total_amount = order_products.aggregate(Sum('total_price'))['total_price__sum'] or 0
 
     context = {
@@ -66,13 +59,6 @@ def cart_remove(request):
         return JsonResponse({'order_total': round(total, 2), 'order_empty': remaining_items.count() == 0})
     return JsonResponse({}, status=400)
 
-
-
-@login_required(login_url='/')
-def home(request):
-    nav_items = Navigation.objects.all().order_by('order')
-    return render(request, 'webapp/base.html', {'nav_items': nav_items})
-
 @login_required(login_url='/')
 def order_product(request):
     if request.method == 'POST':
@@ -92,5 +78,3 @@ def order_product(request):
         )
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
-
-
