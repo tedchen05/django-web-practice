@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from webapp.models import Product, Navigation, OrderProduct
 
-
 # Register your models here.
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id','name', 'description','price')
@@ -11,8 +10,8 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 class NavigationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'order','title', 'url')
-    list_filter = ('title','url')
+    list_display = ('id', 'order','title', 'url', 'parent_id')
+    list_filter = ('order','title')
     search_fields = ('title','url')
     ordering = ('id',)
 
