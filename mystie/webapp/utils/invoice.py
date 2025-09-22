@@ -105,7 +105,10 @@ def fill_login_form(driver, account, password, captcha_text):
     if "圖形驗證碼驗證失敗" in driver.page_source:
         print("驗證碼錯誤！")
         captcha_text = get_captcha_text(driver)
-        fill_login_form(driver, account, password, captcha_text)
+        login_result = fill_login_form(driver, account, password, captcha_text)
+        if login_result is not True:
+            driver.quit()
+            return login_result
 
     if "返回首頁" in driver.page_source:
         element = driver.find_element("xpath", '//a[@title="返回首頁"]')
@@ -115,7 +118,10 @@ def fill_login_form(driver, account, password, captcha_text):
         login_button.click()
         time.sleep(1)
         captcha_text = get_captcha_text(driver)
-        fill_login_form(driver, account, password, captcha_text)
+        login_result = fill_login_form(driver, account, password, captcha_text)
+        if login_result is not True:
+            driver.quit()
+            return login_result
     return True
 
 def select_invoice_date(driver, start_day, end_day):
@@ -167,7 +173,8 @@ def crawl_pages(driver, all_data=None):
     if all_data is None:
         all_data = []
 
-    table_element = wait_for_element(driver, By.CSS_SELECTOR, "table.table_style.have_checkbox.merge")
+    wait_for_element(driver, By.CSS_SELECTOR, "table.table_style.have_checkbox.merge")
+    time.sleep(0.3)
     chrome = driver.page_source
     soup = BeautifulSoup(chrome, 'html.parser')
     table = soup.find("table", class_="table table_style have_checkbox merge").find_all("td")

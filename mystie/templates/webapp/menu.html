@@ -47,10 +47,28 @@
     })
     .then(response => {
       if (response.ok) {
-        alert('訂購成功！');
+        Swal.fire({
+          icon: 'success',
+          title: '訂購成功',
+          text: '商品已加入訂購車',
+          confirmButtonText: '確定'
+        });
       } else {
-        alert('訂購失敗，請稍後再試。');
+        Swal.fire({
+          icon: 'error',
+          title: '訂購失敗',
+          text: '請稍後再試或聯絡客服',
+          confirmButtonText: '確定'
+        });
       }
+    })
+    .catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: '伺服器錯誤',
+        text: '無法連線，請稍後再試',
+        confirmButtonText: '確定'
+      });
     });
   }
 </script>

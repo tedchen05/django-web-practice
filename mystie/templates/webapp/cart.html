@@ -124,7 +124,12 @@ document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
         removeBtn.classList.add('btn-danger');
       })
       .catch(error => {
-        alert('更新失敗');
+        Swal.fire({
+          icon: 'error',
+          title: '更新失敗',
+          text: '請稍後再試或檢查網路連線',
+          confirmButtonText: '確定'
+        });
       });
     }
   });
@@ -186,7 +191,13 @@ document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
         }
       })
       .catch(error => {
-        alert('移除失敗');
+        // ❌ 失敗提示
+        Swal.fire({
+          icon: 'error',
+          title: '移除失敗',
+          text: '請稍後再試或聯絡管理員',
+          confirmButtonText: '確定'
+        });
       });
     }
   });
