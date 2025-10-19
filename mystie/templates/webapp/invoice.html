@@ -13,11 +13,11 @@
             <div class="bg-gradient-light p-3 rounded shadow-sm">
                 <h3 class="mb-3">登入資訊</h3>
                 <div class="form-group">
-                    <label>帳號</label>
+                    <label>帳號 (電話號碼)</label>
                     <input v-model="username" type="text" class="form-control" placeholder="請輸入帳號" v-on:keyup.enter="btnConfirm">
                 </div>
                 <div class="form-group mt-3">
-                    <label>密碼</label>
+                    <label>密碼 (驗證碼)</label>
                     <input v-model="password" type="password" class="form-control" placeholder="請輸入密碼" v-on:keyup.enter="btnConfirm">
                 </div>
                 <div class="form-group mt-3">
@@ -32,7 +32,7 @@
 
                 <div class="form-check mt-3">
                     <input v-model="headless" type="checkbox" id="headless" class="form-check-input">
-                    <label for="headless" class="form-check-label">開啟有頭模式</label>
+                    <label for="headless" class="form-check-label">開啟有頭模式 (可觀看運行軌跡)</label>
                 </div>
 
                 <div class="mt-4 d-flex justify-content-between">

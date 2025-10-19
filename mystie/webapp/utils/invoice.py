@@ -95,6 +95,11 @@ def fill_login_form(driver, account, password, captcha_text):
     captcha_input.send_keys(captcha_text)
 
     time.sleep(0.3)
+    if "輸入的值不是正確的手機號碼" in driver.page_source:
+        error_element = driver.find_element(By.XPATH, "//input[@data-bs-original-title='輸入的值不是正確的手機號碼']")
+        error_text = error_element.get_attribute("data-bs-original-title")
+        print("輸入的值不是正確的手機號碼！")
+        return f"系統訊息：{error_text}"
 
     if "使用者帳號或密碼錯誤" in driver.page_source:
         error_element = driver.find_element(By.XPATH, "//span[contains(text(),'使用者帳號或密碼錯誤')]")
