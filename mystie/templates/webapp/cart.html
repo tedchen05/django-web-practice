@@ -56,64 +56,111 @@
 </div>
 
 <script>
-document.getElementById('checkout-btn').addEventListener('click', function(e) {
-  e.preventDefault(); // 阻止跳轉
-  alert('暫無此功能');
-});
-document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
-  editBtn.addEventListener('click', function() {
-    const row = editBtn.closest('tr');
-    const quantityText = row.querySelector('.quantity-text');
-    const quantityInput = row.querySelector('.quantity-input');
-    const removeBtn = row.querySelector('.remove-btn');
+  document.getElementById('checkout-btn').addEventListener('click', function(e) {
+    e.preventDefault(); // 阻止跳轉
+      Swal.fire({
+      icon: 'info',
+      title: '功能尚未開放',
+      text: '暫無此功能，敬請期待',
+      confirmButtonText: '確定'
+    });
+  });
+  document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
+    editBtn.addEventListener('click', function() {
+      const row = editBtn.closest('tr');
+      const quantityText = row.querySelector('.quantity-text');
+      const quantityInput = row.querySelector('.quantity-input');
+      const removeBtn = row.querySelector('.remove-btn');
 
-    const isEditing = !quantityInput.classList.contains('d-none');
+      const isEditing = !quantityInput.classList.contains('d-none');
 
-    if (!isEditing) {
-      // 進入編輯模式
-      quantityText.classList.add('d-none');
-      quantityInput.classList.remove('d-none');
+      if (!isEditing) {
+        // 進入編輯模式
+        quantityText.classList.add('d-none');
+        quantityInput.classList.remove('d-none');
 
-      editBtn.textContent = '確定';
-      editBtn.classList.remove('btn-secondary');
-      editBtn.classList.add('btn-primary');
+        editBtn.textContent = '確定';
+        editBtn.classList.remove('btn-secondary');
+        editBtn.classList.add('btn-primary');
 
-      removeBtn.textContent = '取消';
-      removeBtn.classList.remove('btn-danger');
-      removeBtn.classList.add('btn-warning');
-    } else {
-      // 確定修改
-      const newQuantity = quantityInput.value;
-      const itemId = row.dataset.itemId;
+        removeBtn.textContent = '取消';
+        removeBtn.classList.remove('btn-danger');
+        removeBtn.classList.add('btn-warning');
+      } else {
+        // 確定修改
+        const newQuantity = quantityInput.value;
+        const itemId = row.dataset.itemId;
 
-      fetch('cart-update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({
-          quantity: newQuantity,
-          item_id: itemId,
+        fetch('cart-update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({
+            quantity: newQuantity,
+            item_id: itemId,
+          })
         })
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('更新失敗');
-        return response.json();
-      })
-      .then(data => {
-        quantityText.textContent = data.new_quantity;
+        .then(response => {
+          if (!response.ok) throw new Error('更新失敗');
+          return response.json();
+        })
+        .then(data => {
+          quantityText.textContent = data.new_quantity;
+          quantityText.classList.remove('d-none');
+          quantityInput.classList.add('d-none');
+
+          // 更新總價欄位
+          const totalPriceCell = row.querySelector('.total-price');
+          if (totalPriceCell) {
+            const formattedPrice = parseFloat(data.new_total_price).toFixed(2);
+            totalPriceCell.textContent = `NT$${formattedPrice}`;
+          }
+          const orderTotalElement = document.querySelector('#order-total');
+          orderTotalElement.textContent = `訂單總金額：NT$${data.order_total}`;
+
+          editBtn.textContent = '修改';
+          editBtn.classList.remove('btn-primary');
+          editBtn.classList.add('btn-secondary');
+
+          removeBtn.textContent = '移除';
+          removeBtn.classList.remove('btn-warning');
+          removeBtn.classList.add('btn-danger');
+
+          Swal.fire({
+            icon: 'success',
+            title: '更新成功',
+            text: '商品數量與金額已成功更新',
+            confirmButtonText: '確定'
+          });
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: '更新失敗',
+            text: '請稍後再試或檢查網路連線',
+            confirmButtonText: '確定'
+          });
+        });
+      }
+    });
+
+    // 處理取消按鈕
+    const removeBtn = editBtn.closest('tr').querySelector('.remove-btn');
+    removeBtn.addEventListener('click', function() {
+      const row = removeBtn.closest('tr');
+      const quantityText = row.querySelector('.quantity-text');
+      const quantityInput = row.querySelector('.quantity-input');
+      const editBtn = row.querySelector('.edit-btn');
+
+      const isEditing = !quantityInput.classList.contains('d-none');
+
+      if (isEditing) {
+        // 取消編輯
+        quantityInput.value = quantityText.textContent;
         quantityText.classList.remove('d-none');
         quantityInput.classList.add('d-none');
-
-        // 更新總價欄位
-        const totalPriceCell = row.querySelector('.total-price');
-        if (totalPriceCell) {
-          const formattedPrice = parseFloat(data.new_total_price).toFixed(2);
-          totalPriceCell.textContent = `NT$${formattedPrice}`;
-        }
-        const orderTotalElement = document.querySelector('#order-total');
-        orderTotalElement.textContent = `訂單總金額：NT$${data.order_total}`;
 
         editBtn.textContent = '修改';
         editBtn.classList.remove('btn-primary');
@@ -122,85 +169,55 @@ document.querySelectorAll('.edit-btn').forEach(function(editBtn) {
         removeBtn.textContent = '移除';
         removeBtn.classList.remove('btn-warning');
         removeBtn.classList.add('btn-danger');
-      })
-      .catch(error => {
-        Swal.fire({
-          icon: 'error',
-          title: '更新失敗',
-          text: '請稍後再試或檢查網路連線',
-          confirmButtonText: '確定'
+      } else {
+        // 執行移除邏輯
+        const itemId = row.dataset.itemId;
+
+        fetch('cart-remove', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ item_id: itemId })
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('移除失敗');
+          return response.json();
+        })
+        .then(data => {
+          // 從 DOM 中移除該列
+          row.remove();
+
+          // 更新訂單總金額
+          const orderTotalElement = document.querySelector('#order-total');
+          orderTotalElement.textContent = `訂單總金額：NT$${data.order_total}`;
+          // 如果購物車變空，顯示提示訊息
+          if (data.order_empty) {
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+              <div class="alert alert-info" role="alert">
+                您的訂購車目前是空的。
+              </div>
+            `;
+          }
+          Swal.fire({
+            icon: 'success',
+            title: '移除成功',
+            text: '商品已成功從訂購車移除',
+            confirmButtonText: '確定'
+          });
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: '移除失敗',
+            text: '請稍後再試或聯絡管理員',
+            confirmButtonText: '確定'
+          });
         });
-      });
-    }
+      }
+    });
   });
-
-  // 處理取消按鈕
-  const removeBtn = editBtn.closest('tr').querySelector('.remove-btn');
-  removeBtn.addEventListener('click', function() {
-    const row = removeBtn.closest('tr');
-    const quantityText = row.querySelector('.quantity-text');
-    const quantityInput = row.querySelector('.quantity-input');
-    const editBtn = row.querySelector('.edit-btn');
-
-    const isEditing = !quantityInput.classList.contains('d-none');
-
-    if (isEditing) {
-      // 取消編輯
-      quantityInput.value = quantityText.textContent;
-      quantityText.classList.remove('d-none');
-      quantityInput.classList.add('d-none');
-
-      editBtn.textContent = '修改';
-      editBtn.classList.remove('btn-primary');
-      editBtn.classList.add('btn-secondary');
-
-      removeBtn.textContent = '移除';
-      removeBtn.classList.remove('btn-warning');
-      removeBtn.classList.add('btn-danger');
-    } else {
-      // 執行移除邏輯
-      const itemId = row.dataset.itemId;
-
-      fetch('cart-remove', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({ item_id: itemId })
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('移除失敗');
-        return response.json();
-      })
-      .then(data => {
-        // 從 DOM 中移除該列
-        row.remove();
-
-        // 更新訂單總金額
-        const orderTotalElement = document.querySelector('#order-total');
-        orderTotalElement.textContent = `訂單總金額：NT$${data.order_total}`;
-        // 如果購物車變空，顯示提示訊息
-        if (data.order_empty) {
-          const container = document.querySelector('.container');
-          container.innerHTML = `
-            <div class="alert alert-info" role="alert">
-              您的訂購車目前是空的。
-            </div>
-          `;
-        }
-      })
-      .catch(error => {
-        // ❌ 失敗提示
-        Swal.fire({
-          icon: 'error',
-          title: '移除失敗',
-          text: '請稍後再試或聯絡管理員',
-          confirmButtonText: '確定'
-        });
-      });
-    }
-  });
-});
 </script>
 {% endblock %}
