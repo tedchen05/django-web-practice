@@ -1,0 +1,8 @@
+# Python 快取
+__pycache__/
+
+# 虛擬環境
+.venv/
+
+# Visual Studio
+.vs/
