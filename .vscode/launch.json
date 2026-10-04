@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Django: 啟動網站",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "program": "${workspaceFolder}/mysite/manage.py",
+            "args": ["runserver", "127.0.0.1:8000"],
+            "cwd": "${workspaceFolder}/mysite",
+            "django": true,
+            "justMyCode": true
+        }
+    ]
+}
