@@ -22,3 +22,5 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
     return redirect('login')  # 登出後導向登入頁
+
+

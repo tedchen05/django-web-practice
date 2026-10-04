@@ -5,31 +5,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3cce997c-fcfa-4016-bba7-638f4d2e657c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/mystie/templates/accounts/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mystie/templates/webapp/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mystie/templates/webapp/menu.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mystie/webapp/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mystie/accounts/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mystie/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/mystie/accounts/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mystie/captcha.png" beforeDir="false" afterPath="$PROJECT_DIR$/mystie/captcha.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mystie/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/mystie/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mystie/templates/webapp/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/mystie/templates/webapp/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mystie/webapp/views/cart.py" beforeDir="false" afterPath="$PROJECT_DIR$/mystie/webapp/views/cart.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "tedchen05"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;tedchen05&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/tedchen05/mystie.git",
-    "accountId": "0dbe998e-a8d5-4b29-9659-525fec907dc8"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/tedchen05/mystie.git&quot;,
+    &quot;accountId&quot;: &quot;0dbe998e-a8d5-4b29-9659-525fec907dc8&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -38,18 +48,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/user/Desktop/Django",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/Django&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

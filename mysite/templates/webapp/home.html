@@ -87,40 +87,40 @@
     <div class="layout-container">
         <div class="sidebar">
             {% if request.user.is_authenticated %}
-              <div class="text-light mb-3 d-flex justify-content-between align-items-center" style="font-size: 13px;">
-                  <span>👤 目前使用者：{{ request.user.username }}</span>
-                  <form action="{% url 'logout' %}" method="post" style="margin: 0;">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-outline-light btn-sm" style="font-size: 12px;">登出</button>
-                  </form>
-              </div>
+                <div class="text-light mb-3 d-flex justify-content-between align-items-center" style="font-size: 13px;">
+                    <span>👤 目前使用者：{{ request.user.username }}</span>
+                    <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm" style="font-size: 12px;">登出</button>
+                    </form>
+                </div>
             {% endif %}
 
-<ul>
-            {% for node in nav_items %}
-                <li>
-                    {% if node.children %}
-                        <span class="toggle-node" onclick="toggleChildren({{ node.obj.id }})">
-                            {% if node.obj.order == 1 %}
-                                <strong>{{ node.obj.title }}</strong>
-                            {% else %}
-                                {{ node.obj.title }}
-                            {% endif %}
-                        </span>
-                        <ul id="children-{{ node.obj.id }}" style="display:none;">
-                            {% for child in node.children %}
-                                <li><a href="{{ child.obj.url }}">{{ child.obj.title }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        {% if node.obj.order == 1 %}
-                            <h2><a href="{{ node.obj.url }}">{{ node.obj.title }}</a></h2>
+            <ul>
+                {% for node in nav_items %}
+                    <li>
+                        {% if node.children %}
+                            <span class="toggle-node" onclick="toggleChildren({{ node.obj.id }})">
+                                {% if node.obj.order == 1 %}
+                                    <strong>{{ node.obj.title }}</strong>
+                                {% else %}
+                                    {{ node.obj.title }}
+                                {% endif %}
+                            </span>
+                            <ul id="children-{{ node.obj.id }}" style="display:none;">
+                                {% for child in node.children %}
+                                    <li><a href="{{ child.obj.url }}">{{ child.obj.title }}</a></li>
+                                {% endfor %}
+                            </ul>
                         {% else %}
-                            <a href="{{ node.obj.url }}">{{ node.obj.title }}</a>
+                            {% if node.obj.order == 1 %}
+                                <h2><a href="{{ node.obj.url }}">{{ node.obj.title }}</a></h2>
+                            {% else %}
+                                <a href="{{ node.obj.url }}">{{ node.obj.title }}</a>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                </li>
-            {% endfor %}
+                    </li>
+                {% endfor %}
             </ul>
         </div>
         <div class="content">

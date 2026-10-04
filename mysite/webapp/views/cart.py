@@ -78,3 +78,6 @@ def order_product(request):
         )
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
+
+
+
